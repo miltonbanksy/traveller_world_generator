@@ -1,17 +1,17 @@
 import random
 
 main_world_sizes = [
-    {"size": 0, "unicode": "0", "diameter": "Less than 1000 km", "example": "Asteroid, Orbital Complex", "gravity": "Negligible", "common features": "Uninhabitable by most forms of life without technical support."},
-    {"size": 1, "unicode": "1", "diameter": "1,600 km", "example": "Large Asteroid, Typical Moon", "gravity": "0.05 (Low gravity)", "common features": "Improbable-looking rock formations, thin and spindly lifeforms, and flying as a common form of locomotion."},
-    {"size": 2, "unicode": "2", "diameter": "3,200 km", "example": "Typical Moon, Large Moon, Small Planet, Pluto", "gravity": "0.15 (Low gravity)", "common features": "Improbable-looking rock formations, thin and spindly lifeforms, and flying as a common form of locomotion."},
-    {"size": 3, "unicode": "3", "diameter": "4,800 km", "example": "Large Moon, Small Planet, Mercury", "gravity": "0.25 (Low gravity)", "common features": "Improbable-looking rock formations, thin and spindly lifeforms, and flying as a common form of locomotion."},
-    {"size": 4, "unicode": "4", "diameter": "6,400 km", "example": "Small Planet, Typical Planet, Mars", "gravity": "0.35 (Low gravity)", "common features": "Improbable-looking rock formations, thin and spindly lifeforms, and flying as a common form of locomotion."},
-    {"size": 5, "unicode": "5", "diameter": "8,000 km", "example": "Typical Planet", "gravity": "0.45 (Low gravity)", "common features": "Improbable-looking rock formations, thin and spindly lifeforms, and flying as a common form of locomotion."},
-    {"size": 6, "unicode": "6", "diameter": "9,600 km", "example": "Typical Planet", "gravity": "0.7 (Low gravity)", "common features": "Improbable-looking rock formations, thin and spindly lifeforms, and flying as a common form of locomotion."},
-    {"size": 7, "unicode": "7", "diameter": "11,200 km", "example": "Typical Planet, Venus", "gravity": "0.9 (Earth-like gravity)", "common features": "Variable"},
-    {"size": 8, "unicode": "8", "diameter": "12,800 km", "example": "Typical Planet, Earth", "gravity": "1.0 (Earth-like gravity)", "common features": "Variable"},
-    {"size": 9, "unicode": "9", "diameter": "14,400 km", "example": "Typical Planet, Larger than Earth", "gravity": "1.25 (Earth-like gravity)", "common features": "Variable"},
-    {"size": 10, "unicode": "A", "diameter": "Greater than 16,000 km", "example": "Large Planet", "gravity": "1.4 (High gravity)", "common features": "Wide rocky plains, squat, muscular creatures and plant life that spreads out like lichen instead of growing up. Crawling, burrowing or swimming are the most common forms of locomotion."}
+    {"size": 0, "diameter": "Less than 1000 km", "example": "Asteroid, Orbital Complex", "gravity": "Negligible", "common features": "Uninhabitable by most forms of life without technical support."},
+    {"size": 1,"diameter": "1,600 km", "example": "Large Asteroid, Typical Moon", "gravity": "0.05 (Low gravity)", "common features": "Improbable-looking rock formations, thin and spindly lifeforms, and flying as a common form of locomotion."},
+    {"size": 2, "diameter": "3,200 km", "example": "Typical Moon, Large Moon, Small Planet, Pluto", "gravity": "0.15 (Low gravity)", "common features": "Improbable-looking rock formations, thin and spindly lifeforms, and flying as a common form of locomotion."},
+    {"size": 3, "diameter": "4,800 km", "example": "Large Moon, Small Planet, Mercury", "gravity": "0.25 (Low gravity)", "common features": "Improbable-looking rock formations, thin and spindly lifeforms, and flying as a common form of locomotion."},
+    {"size": 4, "diameter": "6,400 km", "example": "Small Planet, Typical Planet, Mars", "gravity": "0.35 (Low gravity)", "common features": "Improbable-looking rock formations, thin and spindly lifeforms, and flying as a common form of locomotion."},
+    {"size": 5, "diameter": "8,000 km", "example": "Typical Planet", "gravity": "0.45 (Low gravity)", "common features": "Improbable-looking rock formations, thin and spindly lifeforms, and flying as a common form of locomotion."},
+    {"size": 6, "diameter": "9,600 km", "example": "Typical Planet", "gravity": "0.7 (Low gravity)", "common features": "Improbable-looking rock formations, thin and spindly lifeforms, and flying as a common form of locomotion."},
+    {"size": 7, "diameter": "11,200 km", "example": "Typical Planet, Venus", "gravity": "0.9 (Earth-like gravity)", "common features": "Variable"},
+    {"size": 8, "diameter": "12,800 km", "example": "Typical Planet, Earth", "gravity": "1.0 (Earth-like gravity)", "common features": "Variable"},
+    {"size": 9, "diameter": "14,400 km", "example": "Typical Planet, Larger than Earth", "gravity": "1.25 (Earth-like gravity)", "common features": "Variable"},
+    {"size": 10, "diameter": "Greater than 16,000 km", "example": "Large Planet", "gravity": "1.4 (High gravity)", "common features": "Wide rocky plains, squat, muscular creatures and plant life that spreads out like lichen instead of growing up. Crawling, burrowing or swimming are the most common forms of locomotion."}
 ]
 
 main_world_atmospheres = [
@@ -247,7 +247,7 @@ def generate_tech_level(chars):
 def world():
     world_size = generate_size()
     size = world_size["size"]
-    unicode_size = world_size['unicode']
+    #unicode_size = world_size['unicode']
     diameter = world_size["diameter"]
     example = world_size["example"]
     gravity = world_size['gravity']
@@ -301,7 +301,7 @@ def world():
 
     planetCharacteristicLabels = {
         "starport": starport_class, 
-        "size": unicode_size, 
+        "size": to_hex(size), 
         "atmosphere": unicode_atmos,
         "hydrographics": unicode_hydro,
         "population": unicode_population,
@@ -311,14 +311,14 @@ def world():
     tech_level = generate_tech_level(planetCharacteristicLabels)
 
     print("\nWORLD SUMMARY")
-    print(f"Name 0101 {starport_class}{unicode_size}{unicode_atmos}{unicode_hydro}{unicode_population}{unicode_gov}{law_level}-{tech_level}")
+    print(f"Name 0101 {starport_class}{to_hex(size)}{unicode_atmos}{unicode_hydro}{unicode_population}{unicode_gov}{law_level}-{tech_level}")
     print()
     print(f"STARPORT ({starport_class}) {starport_quality}, Fuel: {starport_fuel}")
     print("Berthing Cost:", starport_berth_cost)
     print("Facilities:", starport_facilities)
     print("Bases:", starport_bases)
     print()
-    print(f"SIZE ({unicode_size}) {diameter}, {gravity}")
+    print(f"SIZE ({to_hex(size)}) {diameter}, {gravity}")
     print("Examples:", example)
     print("Common Features:", common_features)
     print()
