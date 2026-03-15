@@ -15,22 +15,22 @@ main_world_sizes = [
 ]
 
 main_world_atmospheres = [
-    {"atmos": 0, "unicode": "0", "composition": "None", "pressure": "0.00", "gear": "Vacc Suit"},
-    {"atmos": 1, "unicode": "1", "composition": "Trace", "pressure": "0.001-0.09", "gear": "Vacc Suit"},
-    {"atmos": 2, "unicode": "2", "composition": "Very Thin, Tainted - Contain elements harmful to humans, such as unusually high proportion of CO2.", "pressure": "0.1-0.42", "gear": "Respirator, Filter"},
-    {"atmos": 3, "unicode": "3", "composition": "Very Thin", "pressure": "0.1-0.42", "gear": "Respirator"},
-    {"atmos": 4, "unicode": "4", "composition": "Thin, Tainted - Contain elements harmful to humans, such as unusually high proportion of CO2.", "pressure": "0.43-0.7", "gear": "Filter"},
-    {"atmos": 5, "unicode": "5", "composition": "Thin", "pressure": "0.43-0.7", "gear": "None"},
-    {"atmos": 6, "unicode": "6", "composition": "Standard", "pressure": "0.71-1.49", "gear": "None"},
-    {"atmos": 7, "unicode": "7", "composition": "Standard, Tainted - Contain elements harmful to humans, such as unusually high proportion of CO2.", "pressure": "0.71-1.49", "gear": "Filter"},
-    {"atmos": 8, "unicode": "8", "composition": "Dense", "pressure": "1.5-2.49", "gear": "None"},
-    {"atmos": 9, "unicode": "9", "composition": "Dense, Tainted - Contain elements harmful to humans, such as unusually high proportion of CO2.", "pressure": "1.5-2.49", "gear": "Filter"},
-    {"atmos": 10, "unicode": "A", "composition": "Exotic - Unbreathable by humans but not otherwise hazardous.", "pressure": "Varies", "gear": "Air Supply"},
-    {"atmos": 11, "unicode": "B", "composition": "Corrosive - Highly dangerous! Do not breathe!", "pressure": "Varies", "gear": "Vacc Suit"},
-    {"atmos": 12, "unicode": "C", "composition": "Insidious - Highly dangerous! Do not breathe! Toxic gasses may destroy the seals and filters on protective gear.", "pressure": "Varies", "gear": "Vacc Suit"},
-    {"atmos": 13, "unicode": "D", "composition": "Very Dense - High pressure nitrogen and oxygen. Deadly to humans. Pressure decreases with increasing altitudes.", "pressure": "2.5+", "gear": "None"},
-    {"atmos": 14, "unicode": "E", "composition": "Low - Thin nitrogen and oxygen atmospheres that settle in lowlands and depressions, only breathable there. Pressure drops rapidly to a vaccum at higher altitudes.", "pressure": "0.5 or less", "gear": "None"},
-    {"atmos": 15, "unicode": "F", "composition": "Unusual - Erratic, Changeable atmosphere.", "pressure": "Varies", "gear": "Varies"}
+    {"atmos": 0, "composition": "None", "pressure": "0.00", "gear": "Vacc Suit"},
+    {"atmos": 1, "composition": "Trace", "pressure": "0.001-0.09", "gear": "Vacc Suit"},
+    {"atmos": 2, "composition": "Very Thin, Tainted - Contain elements harmful to humans, such as unusually high proportion of CO2.", "pressure": "0.1-0.42", "gear": "Respirator, Filter"},
+    {"atmos": 3, "composition": "Very Thin", "pressure": "0.1-0.42", "gear": "Respirator"},
+    {"atmos": 4, "composition": "Thin, Tainted - Contain elements harmful to humans, such as unusually high proportion of CO2.", "pressure": "0.43-0.7", "gear": "Filter"},
+    {"atmos": 5, "composition": "Thin", "pressure": "0.43-0.7", "gear": "None"},
+    {"atmos": 6, "composition": "Standard", "pressure": "0.71-1.49", "gear": "None"},
+    {"atmos": 7, "composition": "Standard, Tainted - Contain elements harmful to humans, such as unusually high proportion of CO2.", "pressure": "0.71-1.49", "gear": "Filter"},
+    {"atmos": 8, "composition": "Dense", "pressure": "1.5-2.49", "gear": "None"},
+    {"atmos": 9, "composition": "Dense, Tainted - Contain elements harmful to humans, such as unusually high proportion of CO2.", "pressure": "1.5-2.49", "gear": "Filter"},
+    {"atmos": 10, "composition": "Exotic - Unbreathable by humans but not otherwise hazardous.", "pressure": "Varies", "gear": "Air Supply"},
+    {"atmos": 11, "composition": "Corrosive - Highly dangerous! Do not breathe!", "pressure": "Varies", "gear": "Vacc Suit"},
+    {"atmos": 12, "composition": "Insidious - Highly dangerous! Do not breathe! Toxic gasses may destroy the seals and filters on protective gear.", "pressure": "Varies", "gear": "Vacc Suit"},
+    {"atmos": 13, "composition": "Very Dense - High pressure nitrogen and oxygen. Deadly to humans. Pressure decreases with increasing altitudes.", "pressure": "2.5+", "gear": "None"},
+    {"atmos": 14, "composition": "Low - Thin nitrogen and oxygen atmospheres that settle in lowlands and depressions, only breathable there. Pressure drops rapidly to a vaccum at higher altitudes.", "pressure": "0.5 or less", "gear": "None"},
+    {"atmos": 15, "composition": "Unusual - Erratic, Changeable atmosphere.", "pressure": "Varies", "gear": "Varies"}
 ]
 
 main_world_temperatures = [
@@ -255,7 +255,7 @@ def world():
 
     world_atmosphere = generate_atmosphere(size)
     atmos = world_atmosphere['atmos']
-    unicode_atmos = world_atmosphere['unicode']
+    #unicode_atmos = world_atmosphere['unicode']
     composition = world_atmosphere['composition']
     pressure = world_atmosphere['pressure']
     gear = world_atmosphere['gear']
@@ -302,7 +302,7 @@ def world():
     planetCharacteristicLabels = {
         "starport": starport_class, 
         "size": to_hex(size), 
-        "atmosphere": unicode_atmos,
+        "atmosphere": to_hex(atmos),
         "hydrographics": unicode_hydro,
         "population": unicode_population,
         "government": unicode_gov
@@ -311,7 +311,7 @@ def world():
     tech_level = generate_tech_level(planetCharacteristicLabels)
 
     print("\nWORLD SUMMARY")
-    print(f"Name 0101 {starport_class}{to_hex(size)}{unicode_atmos}{unicode_hydro}{unicode_population}{unicode_gov}{law_level}-{tech_level}")
+    print(f"Name 0101 {starport_class}{to_hex(size)}{to_hex(atmos)}{unicode_hydro}{unicode_population}{unicode_gov}{law_level}-{tech_level}")
     print()
     print(f"STARPORT ({starport_class}) {starport_quality}, Fuel: {starport_fuel}")
     print("Berthing Cost:", starport_berth_cost)
@@ -322,7 +322,7 @@ def world():
     print("Examples:", example)
     print("Common Features:", common_features)
     print()
-    print(f"ATMOSPHERE ({unicode_atmos})")
+    print(f"ATMOSPHERE ({to_hex(atmos)})")
     print(composition)
     print("Pressure:", pressure)
     print("Required Protection:", gear)
