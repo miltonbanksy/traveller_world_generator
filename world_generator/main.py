@@ -131,142 +131,118 @@ tech_level_mods = {
     "government": {"0":1, "1":0, "2":0, "3":0, "4":0, "5":1, "6":0, "7":2, "8":0, "9":0, "A":0, "B":0, "C":0, "D":-2, "E":-2, "F":0, "X":0}
 }
 
+def build_lookup(table, key):
+    return {row[key]: row for row in table}
 
-def roll_1d6():
-    return random.randint(1, 6)
+# LOOKUP TABLES
+size_lookup = build_lookup(main_world_sizes, "size")
+atmosphere_lookup = build_lookup(main_world_atmospheres, "atmos")
+temp_lookup = build_lookup(main_world_temperatures, "roll")
+hydro_lookup = build_lookup(main_world_hydrographics, "hydro")
+pop_lookup = build_lookup(main_world_populations, "roll")
+gov_lookup = build_lookup(main_world_governments, "roll")
+law_lookup = build_lookup(main_world_law_level, "law_level")
+starport_lookup = build_lookup(main_world_starports, "value")
 
-def roll_2d6():
-    return random.randint(1, 6) + random.randint(1, 6)
+HEX = "0123456789ABCDEF"
 
+def roll(dice, sides=6):
+    return sum(random.randint(1, sides) for _ in range(dice))
+
+def clamp(value, low, high):
+    return max(low, min(high, value))
+
+def to_hex(value):
+    return HEX[value]
 
 def generate_size():
-    size = roll_2d6() -2
-
-    return next(obj for obj in main_world_sizes if obj['size'] == size)
-
+    value = roll(2) -2
+    return size_lookup[value]
 
 def generate_atmosphere(size):
-    atmosphere = roll_2d6() -7 + size
-    atmosphere = max(0, min(15, atmosphere))
-
-    return next(obj for obj in main_world_atmospheres if obj['atmos'] == atmosphere)
-
+    value = clamp(roll(2) - 7 + size, 0, 15)
+    return atmosphere_lookup[value]
 
 def generate_temperature(atmos):
-    if atmos == 0 or atmos == 1:
-        temperature_DM = 0
-    elif atmos == 2 or atmos == 3:
-        temperature_DM = -2
-    elif atmos == 4 or atmos == 5 or atmos == 14:
-        temperature_DM = -1
-    elif atmos == 6 or atmos == 7:
-        temperature_DM = 0
-    elif atmos == 8 or atmos == 9:
-        temperature_DM = 1
-    elif atmos == 10 or atmos == 13 or atmos == 15:
-        temperature_DM = 2
-    elif atmos == 11 or atmos == 12:
-        temperature_DM = 6
+    
+    dm_table = {
+        (0,1): 0,
+        (2,3): -2,
+        (4,5,14): -1,
+        (6,7): 0,
+        (8,9): 1,
+        (10,13,15): 2,
+        (11,12): 6
+    }
 
-    temperature = roll_2d6() + temperature_DM
-    temperature = max(2, min(12, temperature))
+    dm = next(v for k,v in dm_table.items() if atmos in k)
 
-    return next(obj for obj in main_world_temperatures if obj['roll'] == temperature)
+    value = clamp(roll(2) + dm, 2, 12)
+
+    #return temp_lookup[value]
+    return temp_lookup[value]
 
 
 def generate_hydro(size, atmos, temp):
-    if size < 2:
-        hydro = 0
-    else:
-        if atmos in (0, 1, 10, 11, 12):
-            atmosphere_DM = -4
-        else:
-            atmosphere_DM = 0
-        
-        if atmos not in (13, 15):
-            if temp == "Hot":
-                temperature_DM = -2
-            elif temp == "Boiling":
-                temperature_DM = -6
-            else:
-                temperature_DM = 0
-        else:
-            temperature_DM = 0
-        
-        hydro = roll_2d6() - 7 + atmos + atmosphere_DM + temperature_DM
-        hydro = max(0, min(10, hydro))
 
-    return next(obj for obj in main_world_hydrographics if obj['hydro'] == hydro)
-    
+    if size < 2:
+        value = 0
+    else:
+        atmos_dm = -4 if atmos in (0, 1, 10, 11, 12) else 0
+
+        if atmos in (13, 15):
+            temp_dm = 0
+        elif temp == "Hot":
+            temp_dm = -2
+        elif temp == "Boiling":
+            temp_dm = -6
+        else:
+            temp_dm = 0
+
+        value = clamp(roll(2) - 7 + atmos + atmos_dm + temp_dm, 0, 10)
+
+    return hydro_lookup[value]
 
 def generate_population():
-    population = roll_2d6() -2
-    population = max(0, min(12, population))
-    
-    return next(obj for obj in main_world_populations if obj['roll'] == population)
-
+    value = clamp(roll(2) -2, 0, 12)
+    return pop_lookup[value]
 
 def generate_government(pop):
-    gov = roll_2d6() -7 + pop
-    gov = max(0, min(15, gov))
-
+    value = clamp(roll(2) -7 + pop, 0, 15)
     if pop < 1:
-        gov = 0
+        value = 0
 
-    return next(obj for obj in main_world_governments if obj['roll'] == gov)
-
+    return gov_lookup[value]
 
 def generate_law_level(gov):
-    law = roll_2d6() -7 + gov
-    law = max(0, min(9, law))
+    value = clamp(roll(2) -7 + gov, 0, 9)
+    return law_lookup[value]
 
-    return next(obj for obj in main_world_law_level if obj['law_level'] == law)
+def generate_starport(pop):
+    
+    dm = 0
+    if pop >= 8: dm += 1
+    if pop >= 10: dm += 2
+    if pop <= 4: dm -= 1
+    if pop <= 2: dm -= 2
 
-
-def generate_starport(pop, law_level):
-    if pop >= 8:
-        starport_DM1 = 1
-    else:
-        starport_DM1 = 0
-
-    if pop >= 10:
-        starport_DM2 = 2
-    else:
-        starport_DM2 = 0
-
-    if pop <= 4:
-        starport_DM3 = -1
-    else:
-        starport_DM3 = 0
-
-    if pop <= 2:
-        starport_DM4 = -2
-    else:
-        starport_DM4 = 0
-
-    starport = roll_2d6() + starport_DM1 + starport_DM2 + starport_DM3 + starport_DM4
-    starport = max(2, min(11, starport))
-
-    return next(obj for obj in main_world_starports if obj['value'] == starport)
-
+    value = clamp(roll(2) + dm, 2, 11)
+    return starport_lookup[value]
 
 def generate_tech_level(chars):
-    starport_mod = tech_level_mods["starport"][chars["starport"]]
-    size_mod = tech_level_mods["size"][chars["size"]]
-    atmos_mod = tech_level_mods["atmosphere"][chars["atmosphere"]]
-    hydro_mod = tech_level_mods["hydrographics"][chars["hydrographics"]]
-    pop_mod = tech_level_mods["population"][chars["population"]]
-    gov_mod = tech_level_mods["government"][chars["government"]]
+    
+    tech_roll = roll(1)
 
-    tech_roll = roll_1d6() 
-
-    tech_level = (
-        tech_roll + starport_mod + size_mod + atmos_mod + hydro_mod + pop_mod + gov_mod
+    mods = (
+        tech_level_mods["starport"][chars["starport"]] +
+        tech_level_mods["size"][chars["size"]] +
+        tech_level_mods["atmosphere"][chars["atmosphere"]] +
+        tech_level_mods["hydrographics"][chars["hydrographics"]] +
+        tech_level_mods["population"][chars["population"]] +
+        tech_level_mods["government"][chars["government"]]
     )
 
-    tech_level = max(0, tech_level)
-
-    return tech_level
+    return max(0, tech_roll + mods)
 
 def world():
     world_size = generate_size()
@@ -314,7 +290,7 @@ def world():
     law_weapons_banned = world_law_level['banned_weapons']
     law_armor_banned = world_law_level['banned_armor']
 
-    world_starport = generate_starport(pop, law_level)
+    world_starport = generate_starport(pop)
     starport_value = world_starport['value']
     starport_class = world_starport['class']
     starport_quality = world_starport['quality']
