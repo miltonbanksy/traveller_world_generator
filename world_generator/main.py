@@ -1,6 +1,6 @@
 import random
 
-main_world_sizes = [
+main_world_sizes2 = [
     {"size": 0, "diameter": "Less than 1000 km", "example": "Asteroid, Orbital Complex", "gravity": "Negligible", "common features": "Uninhabitable by most forms of life without technical support."},
     {"size": 1,"diameter": "1,600 km", "example": "Large Asteroid, Typical Moon", "gravity": "0.05 (Low gravity)", "common features": "Improbable-looking rock formations, thin and spindly lifeforms, and flying as a common form of locomotion."},
     {"size": 2, "diameter": "3,200 km", "example": "Typical Moon, Large Moon, Small Planet, Pluto", "gravity": "0.15 (Low gravity)", "common features": "Improbable-looking rock formations, thin and spindly lifeforms, and flying as a common form of locomotion."},
@@ -13,6 +13,20 @@ main_world_sizes = [
     {"size": 9, "diameter": "14,400 km", "example": "Typical Planet, Larger than Earth", "gravity": "1.25 (Earth-like gravity)", "common features": "Variable"},
     {"size": 10, "diameter": "Greater than 16,000 km", "example": "Large Planet", "gravity": "1.4 (High gravity)", "common features": "Wide rocky plains, squat, muscular creatures and plant life that spreads out like lichen instead of growing up. Crawling, burrowing or swimming are the most common forms of locomotion."}
 ]
+
+main_world_sizes = {
+    0: {"diameter": "Less than 1000 km", "example": "Asteroid, Orbital Complex", "gravity": "Negligible", "common features": "Uninhabitable by most forms of life without technical support."},
+    1: {"diameter": "1,600 km", "example": "Large Asteroid, Typical Moon", "gravity": "0.05 (Low gravity)", "common features": "Improbable-looking rock formations, thin and spindly lifeforms, and flying as a common form of locomotion."},
+    2: {"diameter": "3,200 km", "example": "Typical Moon, Large Moon, Small Planet, Pluto", "gravity": "0.15 (Low gravity)", "common features": "Improbable-looking rock formations, thin and spindly lifeforms, and flying as a common form of locomotion."},
+    3: {"diameter": "4,800 km", "example": "Large Moon, Small Planet, Mercury", "gravity": "0.25 (Low gravity)", "common features": "Improbable-looking rock formations, thin and spindly lifeforms, and flying as a common form of locomotion."},
+    4: {"diameter": "6,400 km", "example": "Small Planet, Typical Planet, Mars", "gravity": "0.35 (Low gravity)", "common features": "Improbable-looking rock formations, thin and spindly lifeforms, and flying as a common form of locomotion."},
+    5: {"diameter": "8,000 km", "example": "Typical Planet", "gravity": "0.45 (Low gravity)", "common features": "Improbable-looking rock formations, thin and spindly lifeforms, and flying as a common form of locomotion."},
+    6: {"diameter": "9,600 km", "example": "Typical Planet", "gravity": "0.7 (Low gravity)", "common features": "Improbable-looking rock formations, thin and spindly lifeforms, and flying as a common form of locomotion."},
+    7: {"diameter": "11,200 km", "example": "Typical Planet, Venus", "gravity": "0.9 (Earth-like gravity)", "common features": "Variable"},
+    8: {"diameter": "12,800 km", "example": "Typical Planet, Earth", "gravity": "1.0 (Earth-like gravity)", "common features": "Variable"},
+    9: {"diameter": "14,400 km", "example": "Typical Planet, Larger than Earth", "gravity": "1.25 (Earth-like gravity)", "common features": "Variable"},
+    10: {"diameter": "Greater than 16,000 km", "example": "Large Planet", "gravity": "1.4 (High gravity)", "common features": "Wide rocky plains, squat, muscular creatures and plant life that spreads out like lichen instead of growing up. Crawling, burrowing or swimming are the most common forms of locomotion."}
+}
 
 main_world_atmospheres = [
     {"atmos": 0, "composition": "None", "pressure": "0.00", "gear": "Vacc Suit"},
@@ -135,7 +149,7 @@ def build_lookup(table, key):
     return {row[key]: row for row in table}
 
 # LOOKUP TABLES
-size_lookup = build_lookup(main_world_sizes, "size")
+#size_lookup = build_lookup(main_world_sizes, "size")
 atmosphere_lookup = build_lookup(main_world_atmospheres, "atmos")
 temp_lookup = build_lookup(main_world_temperatures, "roll")
 hydro_lookup = build_lookup(main_world_hydrographics, "hydro")
@@ -157,7 +171,7 @@ def to_hex(value):
 
 def generate_size():
     value = roll(2) -2
-    return size_lookup[value]
+    return value, main_world_sizes[value]
 
 def generate_atmosphere(size):
     value = clamp(roll(2) - 7 + size, 0, 15)
