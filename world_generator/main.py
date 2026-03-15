@@ -48,17 +48,17 @@ main_world_temperatures = [
 ]
 
 main_world_hydrographics = [
-    {"hydro": 0, "unicode": "0", "percent": "0-5%", "description": "Desert"},
-    {"hydro": 1, "unicode": "1", "percent": "6-15%", "description": "Dry"},
-    {"hydro": 2, "unicode": "2", "percent": "16-25%", "description": "A few small seas"},
-    {"hydro": 3, "unicode": "3", "percent": "26-35%", "description": "Small seas and oceans"},
-    {"hydro": 4, "unicode": "4", "percent": "36-45%", "description": "Wet"},
-    {"hydro": 5, "unicode": "5", "percent": "46-55%", "description": "A large ocean"},
-    {"hydro": 6, "unicode": "6", "percent": "56-65%", "description": "Large oceans"},
-    {"hydro": 7, "unicode": "7", "percent": "66-75%", "description": "Earth-like"},
-    {"hydro": 8, "unicode": "8", "percent": "76-85%", "description": "A few islands and archipelagos"},
-    {"hydro": 9, "unicode": "9", "percent": "86-95%", "description": "Almost entirely water"},
-    {"hydro": 10, "unicode": "A", "percent": "96-100%", "description": "Water"}
+    {"hydro": 0, "percent": "0-5%", "description": "Desert"},
+    {"hydro": 1, "percent": "6-15%", "description": "Dry"},
+    {"hydro": 2, "percent": "16-25%", "description": "A few small seas"},
+    {"hydro": 3, "percent": "26-35%", "description": "Small seas and oceans"},
+    {"hydro": 4, "percent": "36-45%", "description": "Wet"},
+    {"hydro": 5, "percent": "46-55%", "description": "A large ocean"},
+    {"hydro": 6, "percent": "56-65%", "description": "Large oceans"},
+    {"hydro": 7, "percent": "66-75%", "description": "Earth-like"},
+    {"hydro": 8, "percent": "76-85%", "description": "A few islands and archipelagos"},
+    {"hydro": 9, "percent": "86-95%", "description": "Almost entirely water"},
+    {"hydro": 10, "percent": "96-100%", "description": "Water"}
 ]
 
 main_world_populations = [
@@ -266,7 +266,8 @@ def world():
     temp_description = world_temperature['description']
 
     world_hydro = generate_hydro(size, atmos, temp)
-    unicode_hydro = world_hydro['unicode']
+    hydro = world_hydro['hydro']
+    #unicode_hydro = world_hydro['unicode']
     hydro_percent = world_hydro['percent']
     hydro_description = world_hydro['description']
 
@@ -303,7 +304,7 @@ def world():
         "starport": starport_class, 
         "size": to_hex(size), 
         "atmosphere": to_hex(atmos),
-        "hydrographics": unicode_hydro,
+        "hydrographics": to_hex(hydro),
         "population": unicode_population,
         "government": unicode_gov
         }
@@ -311,7 +312,7 @@ def world():
     tech_level = generate_tech_level(planetCharacteristicLabels)
 
     print("\nWORLD SUMMARY")
-    print(f"Name 0101 {starport_class}{to_hex(size)}{to_hex(atmos)}{unicode_hydro}{unicode_population}{unicode_gov}{law_level}-{tech_level}")
+    print(f"Name 0101 {starport_class}{to_hex(size)}{to_hex(atmos)}{to_hex(hydro)}{unicode_population}{unicode_gov}{law_level}-{tech_level}")
     print()
     print(f"STARPORT ({starport_class}) {starport_quality}, Fuel: {starport_fuel}")
     print("Berthing Cost:", starport_berth_cost)
@@ -330,7 +331,7 @@ def world():
     print(f"TEMPERATURE {avg_temp}, {temp}")
     print(temp_description)
     print()
-    print(f"HYDROGRAPHICS ({unicode_hydro}) {hydro_percent}, {hydro_description}")
+    print(f"HYDROGRAPHICS ({to_hex(hydro)}) {hydro_percent}, {hydro_description}")
     print()
     print(f"POPULATION ({unicode_population}) {population_range} ({population_inhabs}), {population_description}")
     print()
